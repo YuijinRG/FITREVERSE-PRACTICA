@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ReserveApplication<reserve>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "fit.reserve.ReserveApplication",
+            "projectName": "reserve",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

@@ -7,7 +7,65 @@
 </head>
 <body style="font-family:Arial,sans-serif;background:#111827;color:#f8fafc;padding:40px;">
 <h1>Área de Usuario</h1>
-<p>Bienvenido <span th:text="${user.email}"></span></p>
-<p>Rol: <span th:text="${user.role}"></span></p>
+<p>Bienvenido <strong th:text="${user.email}"></strong></p>
+<p>Rol: <strong th:text="${user.role}"></strong></p>
+
+<div th:if="${success}" style="background:#134e4a;padding:10px;border-radius:6px;margin:20px 0;color:#d1fae5;">
+    <p th:text="${success}"></p>
+</div>
+<div th:if="${error}" style="background:#7f1d1d;padding:10px;border-radius:6px;margin:20px 0;color:#fee2e2;">
+    <p th:text="${error}"></p>
+</div>
+
+<section style="margin-top:30px;">
+    <h2>Clases disponibles</h2>
+    <table style="width:100%;border-collapse:collapse;">
+        <thead>
+        <tr style="background:#1e293b;color:#f8fafc;">
+            <th style="padding:12px;border:1px solid #334155;text-align:left;">Nombre</th>
+            <th style="padding:12px;border:1px solid #334155;text-align:left;">Horario</th>
+            <th style="padding:12px;border:1px solid #334155;text-align:left;">Cupos</th>
+            <th style="padding:12px;border:1px solid #334155;text-align:left;">Acción</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="clase : ${classes}" style="background:#0f172a;color:#f8fafc;">
+            <td style="padding:12px;border:1px solid #334155;" th:text="${clase.name}"></td>
+            <td style="padding:12px;border:1px solid #334155;" th:text="${clase.schedule}"></td>
+            <td style="padding:12px;border:1px solid #334155;" th:text="${clase.capacity}"></td>
+            <td style="padding:12px;border:1px solid #334155;">
+                <form th:action="@{/reservar}" method="post">
+                    <input type="hidden" name="classId" th:value="${clase.id}"/>
+                    <button type="submit" style="padding:8px 14px;border:none;border-radius:4px;background:#2563eb;color:#fff;cursor:pointer;">Reservar</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${classes.empty}">
+            <td colspan="4" style="padding:12px;border:1px solid #334155;text-align:center;">No hay clases disponibles</td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+<section style="margin-top:30px;">
+    <h2>Mis reservas</h2>
+    <table style="width:100%;border-collapse:collapse;">
+        <thead>
+        <tr style="background:#1e293b;color:#f8fafc;">
+            <th style="padding:12px;border:1px solid #334155;text-align:left;">Clase</th>
+            <th style="padding:12px;border:1px solid #334155;text-align:left;">Horario</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="registro : ${registrations}" style="background:#111827;color:#f8fafc;">
+            <td style="padding:12px;border:1px solid #334155;" th:text="${registro.gymClass.name}"></td>
+            <td style="padding:12px;border:1px solid #334155;" th:text="${registro.gymClass.schedule}"></td>
+        </tr>
+        <tr th:if="${registrations.empty}">
+            <td colspan="2" style="padding:12px;border:1px solid #334155;text-align:center;">No tienes reservas aún</td>
+        </tr>
+        </tbody>
+    </table>
+</section>
 </body>
 </html>

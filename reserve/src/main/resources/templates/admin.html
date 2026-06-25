@@ -7,7 +7,30 @@
 </head>
 <body style="font-family:Arial,sans-serif;background:#0f172a;color:#f8fafc;padding:40px;">
 <h1>Panel de Administrador</h1>
-<p>Bienvenido <span th:text="${user.email}"></span></p>
-<p>Rol: <span th:text="${user.role}"></span></p>
+<p>Bienvenido <strong th:text="${user.email}"></strong></p>
+<p>Rol: <strong th:text="${user.role}"></strong></p>
+
+<section style="margin-top:30px;">
+    <h2>Registros de clases</h2>
+    <table style="width:100%;border-collapse:collapse;">
+        <thead>
+        <tr style="background:#1e293b;color:#f8fafc;">
+            <th style="padding:12px;border:1px solid #334155;text-align:left;">Usuario</th>
+            <th style="padding:12px;border:1px solid #334155;text-align:left;">Clase</th>
+            <th style="padding:12px;border:1px solid #334155;text-align:left;">Horario</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="registro : ${registrations}" style="background:#111827;color:#f8fafc;">
+            <td style="padding:12px;border:1px solid #334155;" th:text="${registro.user.email}"></td>
+            <td style="padding:12px;border:1px solid #334155;" th:text="${registro.gymClass.name}"></td>
+            <td style="padding:12px;border:1px solid #334155;" th:text="${registro.gymClass.schedule}"></td>
+        </tr>
+        <tr th:if="${registrations.empty}">
+            <td colspan="3" style="padding:12px;border:1px solid #334155;text-align:center;">No hay registros aún</td>
+        </tr>
+        </tbody>
+    </table>
+</section>
 </body>
 </html>

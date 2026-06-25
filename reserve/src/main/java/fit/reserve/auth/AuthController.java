@@ -67,6 +67,7 @@ public class AuthController {
             return "redirect:/";
         }
         model.addAttribute("user", user);
+        model.addAttribute("registrations", userService.getAllRegistrations());
         return "admin";
     }
 
@@ -77,6 +78,28 @@ public class AuthController {
             return "redirect:/";
         }
         model.addAttribute("user", user);
+        model.addAttribute("classes", userService.getAvailableClasses());
+        model.addAttribute("registrations", userService.getRegistrationsForUser(user));
+        return "usuario";
+    }
+
+    @PostMapping("/reservar")
+    public String reservarClase(@RequestParam Long classId,
+                                HttpSession session,
+                                Model model) {
+        UserEntity user = (UserEntity) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/";
+        }
+        try {
+            userService.registerForClass(user, classId);
+            model.addAttribute("success", "Te has registrado correctamente a la clase.");
+        } catch (IllegalArgumentException ex) {
+            model.addAttribute("error", ex.getMessage());
+        }
+        model.addAttribute("user", user);
+        model.addAttribute("classes", userService.getAvailableClasses());
+        model.addAttribute("registrations", userService.getRegistrationsForUser(user));
         return "usuario";
     }
 }
