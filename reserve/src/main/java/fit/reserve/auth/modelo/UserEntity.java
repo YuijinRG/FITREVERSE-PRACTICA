@@ -1,4 +1,4 @@
-package fit.reserve.auth;
+package fit.reserve.auth.modelo;
 
 import jakarta.persistence.*;
 

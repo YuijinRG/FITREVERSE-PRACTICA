@@ -1,4 +1,4 @@
-package fit.reserve.gym;
+package fit.reserve.gym.modelo;
 
 import jakarta.persistence.*;
 

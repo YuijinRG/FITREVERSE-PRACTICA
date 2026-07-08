@@ -1,7 +1,8 @@
 package fit.reserve;
 
-import fit.reserve.gym.GymClass;
-import fit.reserve.gym.GymClassRepository;
+import fit.reserve.gym.modelo.GymClass;
+import fit.reserve.gym.repositorio.GymClassRepository;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

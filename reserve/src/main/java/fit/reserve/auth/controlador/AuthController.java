@@ -1,4 +1,4 @@
-package fit.reserve.auth;
+package fit.reserve.auth.controlador;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -6,6 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import fit.reserve.auth.modelo.UserEntity;
+import fit.reserve.auth.servicio.UserService;
 
 @Controller
 public class AuthController {

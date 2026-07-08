@@ -1,6 +1,6 @@
-package fit.reserve.gym;
+package fit.reserve.gym.modelo;
 
-import fit.reserve.auth.UserEntity;
+import fit.reserve.auth.modelo.UserEntity;
 import jakarta.persistence.*;
 
 @Entity
@@ -49,5 +49,15 @@ public class Registration {
 
     public void setGymClass(GymClass gymClass) {
         this.gymClass = gymClass;
+    }
+
+    public void setUserId(Long userId) {
+        
+        throw new UnsupportedOperationException("Unimplemented method 'setUserId'");
+    }
+
+    public void setClassId(Long classId) {
+       
+        throw new UnsupportedOperationException("Unimplemented method 'setClassId'");
     }
 }

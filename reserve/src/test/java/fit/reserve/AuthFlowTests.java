@@ -1,7 +1,8 @@
 package fit.reserve;
 
-import fit.reserve.auth.UserService;
-import fit.reserve.auth.UserEntity;
+import fit.reserve.auth.modelo.UserEntity;
+import fit.reserve.auth.servicio.UserService;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

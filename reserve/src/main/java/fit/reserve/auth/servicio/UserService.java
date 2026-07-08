@@ -1,9 +1,12 @@
-package fit.reserve.auth;
+package fit.reserve.auth.servicio;
 
-import fit.reserve.gym.GymClass;
-import fit.reserve.gym.GymClassRepository;
-import fit.reserve.gym.Registration;
+import fit.reserve.auth.modelo.UserEntity;
+import fit.reserve.auth.repositorio.UserRepository;
 import fit.reserve.gym.RegistrationRepository;
+import fit.reserve.gym.modelo.GymClass;
+import fit.reserve.gym.modelo.Registration;
+import fit.reserve.gym.repositorio.GymClassRepository;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
