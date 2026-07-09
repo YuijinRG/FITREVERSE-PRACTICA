@@ -10,6 +10,51 @@
 <p>Bienvenido <strong th:text="${user.email}"></strong></p>
 <p>Rol: <strong th:text="${user.role}"></strong></p>
 
+<div th:if="${success}" style="background:#14532d;color:#dcfce7;padding:12px;border-radius:8px;margin-top:16px;" th:text="${success}"></div>
+<div th:if="${error}" style="background:#7f1d1d;color:#fee2e2;padding:12px;border-radius:8px;margin-top:16px;" th:text="${error}"></div>
+
+<section style="margin-top:30px;background:#111827;border:1px solid #334155;border-radius:12px;padding:20px;">
+    <h2>Crear nuevo evento</h2>
+    <form th:action="@{/admin/evento}" method="post" style="display:grid;grid-template-columns:1fr 1fr 130px auto;gap:10px;align-items:end;">
+        <div>
+            <label for="name" style="display:block;margin-bottom:6px;">Nombre</label>
+            <input id="name" name="name" type="text" required style="width:100%;padding:10px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#f8fafc;">
+        </div>
+        <div>
+            <label for="schedule" style="display:block;margin-bottom:6px;">Horario</label>
+            <input id="schedule" name="schedule" type="text" placeholder="Ej. 19:00 - 20:00" required style="width:100%;padding:10px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#f8fafc;">
+        </div>
+        <div>
+            <label for="capacity" style="display:block;margin-bottom:6px;">Cupos</label>
+            <input id="capacity" name="capacity" type="number" min="1" required style="width:100%;padding:10px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#f8fafc;">
+        </div>
+        <button type="submit" style="padding:10px 14px;border:none;border-radius:8px;background:#f59e0b;color:#111827;font-weight:700;cursor:pointer;">Crear</button>
+    </form>
+</section>
+
+<section style="margin-top:30px;">
+    <h2>Eventos disponibles</h2>
+    <table style="width:100%;border-collapse:collapse;">
+        <thead>
+        <tr style="background:#1e293b;color:#f8fafc;">
+            <th style="padding:12px;border:1px solid #334155;text-align:left;">Nombre</th>
+            <th style="padding:12px;border:1px solid #334155;text-align:left;">Horario</th>
+            <th style="padding:12px;border:1px solid #334155;text-align:left;">Cupos</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="clase : ${classes}" style="background:#111827;color:#f8fafc;">
+            <td style="padding:12px;border:1px solid #334155;" th:text="${clase.name}"></td>
+            <td style="padding:12px;border:1px solid #334155;" th:text="${clase.schedule}"></td>
+            <td style="padding:12px;border:1px solid #334155;" th:text="${clase.capacity}"></td>
+        </tr>
+        <tr th:if="${classes.empty}">
+            <td colspan="3" style="padding:12px;border:1px solid #334155;text-align:center;">No hay eventos aún</td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
 <section style="margin-top:30px;">
     <h2>Registros de clases</h2>
     <table style="width:100%;border-collapse:collapse;">
@@ -18,6 +63,8 @@
             <th style="padding:12px;border:1px solid #334155;text-align:left;">Usuario</th>
             <th style="padding:12px;border:1px solid #334155;text-align:left;">Clase</th>
             <th style="padding:12px;border:1px solid #334155;text-align:left;">Horario</th>
+            <th style="padding:12px;border:1px solid #334155;text-align:left;">Pago</th>
+            <th style="padding:12px;border:1px solid #334155;text-align:left;">Estado</th>
         </tr>
         </thead>
         <tbody>
@@ -25,9 +72,11 @@
             <td style="padding:12px;border:1px solid #334155;" th:text="${registro.user.email}"></td>
             <td style="padding:12px;border:1px solid #334155;" th:text="${registro.gymClass.name}"></td>
             <td style="padding:12px;border:1px solid #334155;" th:text="${registro.gymClass.schedule}"></td>
+            <td style="padding:12px;border:1px solid #334155;" th:text="${registro.paid ? 'Registrado' : 'Pendiente'}"></td>
+            <td style="padding:12px;border:1px solid #334155;" th:text="${registro.active ? 'Activa' : 'Cancelada'}"></td>
         </tr>
         <tr th:if="${registrations.empty}">
-            <td colspan="3" style="padding:12px;border:1px solid #334155;text-align:center;">No hay registros aún</td>
+            <td colspan="5" style="padding:12px;border:1px solid #334155;text-align:center;">No hay registros aún</td>
         </tr>
         </tbody>
     </table>

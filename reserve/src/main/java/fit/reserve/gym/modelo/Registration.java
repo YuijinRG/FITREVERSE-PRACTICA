@@ -19,12 +19,20 @@ public class Registration {
     @JoinColumn(name = "gym_class_id", nullable = false)
     private GymClass gymClass;
 
+    @Column(nullable = false)
+    private boolean paid = true;
+
+    @Column(nullable = false)
+    private boolean active = true;
+
     public Registration() {
     }
 
     public Registration(UserEntity user, GymClass gymClass) {
         this.user = user;
         this.gymClass = gymClass;
+        this.paid = true;
+        this.active = true;
     }
 
     public Long getId() {
@@ -51,13 +59,19 @@ public class Registration {
         this.gymClass = gymClass;
     }
 
-    public void setUserId(Long userId) {
-        
-        throw new UnsupportedOperationException("Unimplemented method 'setUserId'");
+    public boolean isPaid() {
+        return paid;
     }
 
-    public void setClassId(Long classId) {
-       
-        throw new UnsupportedOperationException("Unimplemented method 'setClassId'");
+    public void setPaid(boolean paid) {
+        this.paid = paid;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

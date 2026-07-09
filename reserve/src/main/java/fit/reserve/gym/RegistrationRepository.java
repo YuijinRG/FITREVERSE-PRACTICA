@@ -10,5 +10,8 @@ import java.util.List;
 
 public interface RegistrationRepository extends JpaRepository<Registration, Long> {
     List<Registration> findByUser(UserEntity user);
-    boolean existsByUserAndGymClass(UserEntity user, GymClass gymClass);
+
+    List<Registration> findByUserAndActiveTrue(UserEntity user);
+
+    boolean existsByUserAndGymClassAndActiveTrue(UserEntity user, GymClass gymClass);
 }

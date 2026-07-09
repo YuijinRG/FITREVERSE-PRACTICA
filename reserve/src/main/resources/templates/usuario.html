@@ -4,65 +4,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FitReserve | Usuario</title>
+    <style>
+        body{font-family:Arial,sans-serif;background:#111827;color:#f8fafc;padding:24px;margin:0;}
+        .card{background:#0f172a;border:1px solid #334155;border-radius:16px;padding:20px;margin-bottom:20px;}
+        .badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:0.8rem;background:#f59e0b;color:#111827;margin-left:8px;}
+        table{width:100%;border-collapse:collapse;margin-top:12px;}
+        th,td{padding:12px;border:1px solid #334155;text-align:left;}
+        .btn{padding:8px 14px;border:none;border-radius:8px;background:#2563eb;color:#fff;cursor:pointer;}
+        .btn-danger{background:#dc2626;}
+        .btn:disabled{opacity:0.6;cursor:not-allowed;}
+        .msg{padding:10px;border-radius:8px;margin:12px 0;} .success{background:#134e4a;color:#d1fae5;} .error{background:#7f1d1d;color:#fee2e2;}
+    </style>
 </head>
-<body style="font-family:Arial,sans-serif;background:#111827;color:#f8fafc;padding:40px;">
-<h1>Área de Usuario</h1>
-<p>Bienvenido <strong th:text="${user.email}"></strong></p>
-<p>Rol: <strong th:text="${user.role}"></strong></p>
-
-<div th:if="${success}" style="background:#134e4a;padding:10px;border-radius:6px;margin:20px 0;color:#d1fae5;">
-    <p th:text="${success}"></p>
-</div>
-<div th:if="${error}" style="background:#7f1d1d;padding:10px;border-radius:6px;margin:20px 0;color:#fee2e2;">
-    <p th:text="${error}"></p>
+<body>
+<div class="card">
+    <h1>Área de Usuario</h1>
+    <p>Bienvenido <strong th:text="${user.email}"></strong></p>
+    <p>Rol: <strong th:text="${user.role}"></strong> <span class="badge">Reserva sin membresía</span></p>
 </div>
 
-<section style="margin-top:30px;">
+<div th:if="${success}" class="msg success"><p th:text="${success}"></p></div>
+<div th:if="${error}" class="msg error"><p th:text="${error}"></p></div>
+
+<section class="card">
     <h2>Clases disponibles</h2>
-    <table style="width:100%;border-collapse:collapse;">
+    <table>
         <thead>
-        <tr style="background:#1e293b;color:#f8fafc;">
-            <th style="padding:12px;border:1px solid #334155;text-align:left;">Nombre</th>
-            <th style="padding:12px;border:1px solid #334155;text-align:left;">Horario</th>
-            <th style="padding:12px;border:1px solid #334155;text-align:left;">Cupos</th>
-            <th style="padding:12px;border:1px solid #334155;text-align:left;">Acción</th>
+        <tr style="background:#1e293b;">
+            <th>Nombre</th>
+            <th>Horario</th>
+            <th>Cupos</th>
+            <th>Estado</th>
+            <th>Acción</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="clase : ${classes}" style="background:#0f172a;color:#f8fafc;">
-            <td style="padding:12px;border:1px solid #334155;" th:text="${clase.name}"></td>
-            <td style="padding:12px;border:1px solid #334155;" th:text="${clase.schedule}"></td>
-            <td style="padding:12px;border:1px solid #334155;" th:text="${clase.capacity}"></td>
-            <td style="padding:12px;border:1px solid #334155;">
-                <form th:action="@{/reservar}" method="post">
+        <tr th:each="clase : ${classes}">
+            <td th:text="${clase.name}"></td>
+            <td th:text="${clase.schedule}"></td>
+            <td th:text="${clase.capacity}"></td>
+            <td>
+                <span th:if="${clase.capacity > 0}" style="color:#86efac;">Disponible</span>
+                <span th:if="${clase.capacity <= 0}" style="color:#fda4af;">Aforo lleno</span>
+            </td>
+            <td>
+                <form th:action="@{/reservar}" method="post" style="display:inline;">
                     <input type="hidden" name="classId" th:value="${clase.id}"/>
-                    <button type="submit" style="padding:8px 14px;border:none;border-radius:4px;background:#2563eb;color:#fff;cursor:pointer;">Reservar</button>
+                    <button type="submit" class="btn" th:disabled="${clase.capacity <= 0}">Reservar</button>
                 </form>
             </td>
         </tr>
         <tr th:if="${classes.empty}">
-            <td colspan="4" style="padding:12px;border:1px solid #334155;text-align:center;">No hay clases disponibles</td>
+            <td colspan="5" style="text-align:center;">No hay clases disponibles</td>
         </tr>
         </tbody>
     </table>
 </section>
 
-<section style="margin-top:30px;">
+<section class="card">
     <h2>Mis reservas</h2>
-    <table style="width:100%;border-collapse:collapse;">
+    <table>
         <thead>
-        <tr style="background:#1e293b;color:#f8fafc;">
-            <th style="padding:12px;border:1px solid #334155;text-align:left;">Clase</th>
-            <th style="padding:12px;border:1px solid #334155;text-align:left;">Horario</th>
+        <tr style="background:#1e293b;">
+            <th>Clase</th>
+            <th>Horario</th>
+            <th>Pago</th>
+            <th>Acción</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="registro : ${registrations}" style="background:#111827;color:#f8fafc;">
-            <td style="padding:12px;border:1px solid #334155;" th:text="${registro.gymClass.name}"></td>
-            <td style="padding:12px;border:1px solid #334155;" th:text="${registro.gymClass.schedule}"></td>
+        <tr th:each="registro : ${registrations}">
+            <td th:text="${registro.gymClass.name}"></td>
+            <td th:text="${registro.gymClass.schedule}"></td>
+            <td>
+                <span th:if="${registro.paid}" style="color:#86efac;">Pago registrado</span>
+                <span th:unless="${registro.paid}" style="color:#fcd34d;">Pendiente</span>
+            </td>
+            <td>
+                <form th:action="@{/cancelar}" method="post" style="display:inline;">
+                    <input type="hidden" name="registrationId" th:value="${registro.id}"/>
+                    <button type="submit" class="btn btn-danger">Cancelar</button>
+                </form>
+            </td>
         </tr>
         <tr th:if="${registrations.empty}">
-            <td colspan="2" style="padding:12px;border:1px solid #334155;text-align:center;">No tienes reservas aún</td>
+            <td colspan="4" style="text-align:center;">No tienes reservas aún</td>
         </tr>
         </tbody>
     </table>

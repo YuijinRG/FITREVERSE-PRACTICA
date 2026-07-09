@@ -71,6 +71,31 @@ public class AuthController {
         }
         model.addAttribute("user", user);
         model.addAttribute("registrations", userService.getAllRegistrations());
+        model.addAttribute("classes", userService.getAvailableClasses());
+        return "admin";
+    }
+
+    @PostMapping("/admin/evento")
+    public String crearEvento(@RequestParam String name,
+                              @RequestParam String schedule,
+                              @RequestParam Integer capacity,
+                              HttpSession session,
+                              Model model) {
+        UserEntity user = (UserEntity) session.getAttribute("user");
+        if (user == null || !"ADMIN".equalsIgnoreCase(user.getRole())) {
+            return "redirect:/";
+        }
+
+        try {
+            userService.createGymClass(name, schedule, capacity);
+            model.addAttribute("success", "Evento creado correctamente");
+        } catch (IllegalArgumentException ex) {
+            model.addAttribute("error", ex.getMessage());
+        }
+
+        model.addAttribute("user", user);
+        model.addAttribute("registrations", userService.getAllRegistrations());
+        model.addAttribute("classes", userService.getAvailableClasses());
         return "admin";
     }
 
@@ -96,7 +121,27 @@ public class AuthController {
         }
         try {
             userService.registerForClass(user, classId);
-            model.addAttribute("success", "Te has registrado correctamente a la clase.");
+            model.addAttribute("success", "Reserva creada correctamente. Pago registrado.");
+        } catch (IllegalArgumentException ex) {
+            model.addAttribute("error", ex.getMessage());
+        }
+        model.addAttribute("user", user);
+        model.addAttribute("classes", userService.getAvailableClasses());
+        model.addAttribute("registrations", userService.getRegistrationsForUser(user));
+        return "usuario";
+    }
+
+    @PostMapping("/cancelar")
+    public String cancelarReserva(@RequestParam Long registrationId,
+                                  HttpSession session,
+                                  Model model) {
+        UserEntity user = (UserEntity) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/";
+        }
+        try {
+            userService.cancelRegistration(registrationId);
+            model.addAttribute("success", "Reserva cancelada correctamente. El cupo se liberó.");
         } catch (IllegalArgumentException ex) {
             model.addAttribute("error", ex.getMessage());
         }

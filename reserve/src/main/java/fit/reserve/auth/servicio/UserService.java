@@ -50,6 +50,24 @@ public class UserService {
         return gymClassRepository.findAll();
     }
 
+    public GymClass createGymClass(String name, String schedule, Integer capacity) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del evento es obligatorio");
+        }
+        if (schedule == null || schedule.trim().isEmpty()) {
+            throw new IllegalArgumentException("El horario del evento es obligatorio");
+        }
+        if (capacity == null || capacity <= 0) {
+            throw new IllegalArgumentException("La capacidad debe ser mayor a 0");
+        }
+
+        GymClass gymClass = new GymClass();
+        gymClass.setName(name.trim());
+        gymClass.setSchedule(schedule.trim());
+        gymClass.setCapacity(capacity);
+        return gymClassRepository.save(gymClass);
+    }
+
     public Registration registerForClass(UserEntity user, Long classId) {
         UserEntity managedUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
@@ -57,16 +75,40 @@ public class UserService {
         GymClass gymClass = gymClassRepository.findById(classId)
                 .orElseThrow(() -> new IllegalArgumentException("Clase no encontrada"));
 
-        if (registrationRepository.existsByUserAndGymClass(managedUser, gymClass)) {
+        if (registrationRepository.existsByUserAndGymClassAndActiveTrue(managedUser, gymClass)) {
             throw new IllegalArgumentException("Ya estás registrado en esta clase");
         }
 
+        if (gymClass.getCapacity() == null || gymClass.getCapacity() <= 0) {
+            throw new IllegalArgumentException("Aforo lleno. No hay cupos disponibles");
+        }
+
+        gymClass.setCapacity(gymClass.getCapacity() - 1);
+        gymClassRepository.save(gymClass);
+
         Registration registration = new Registration(managedUser, gymClass);
+        registration.setPaid(true);
+        registration.setActive(true);
+        return registrationRepository.save(registration);
+    }
+
+    public Registration cancelRegistration(Long registrationId) {
+        Registration registration = registrationRepository.findById(registrationId)
+                .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada"));
+
+        if (!registration.isActive()) {
+            throw new IllegalArgumentException("La reserva ya fue cancelada");
+        }
+
+        registration.setActive(false);
+        GymClass gymClass = registration.getGymClass();
+        gymClass.setCapacity(gymClass.getCapacity() + 1);
+        gymClassRepository.save(gymClass);
         return registrationRepository.save(registration);
     }
 
     public List<Registration> getRegistrationsForUser(UserEntity user) {
-        return registrationRepository.findByUser(user);
+        return registrationRepository.findByUserAndActiveTrue(user);
     }
 
     public List<Registration> getAllRegistrations() {
